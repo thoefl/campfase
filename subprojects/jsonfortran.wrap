@@ -1,0 +1,9 @@
+[wrap-git]
+url = https://github.com/jacobwilliams/json-fortran
+revision = head
+depth = 1
+patch_directory = jsonfortran
+diff_files = jsonfortran/character.patch
+
+[provide]
+dependency_names = jsonfortran

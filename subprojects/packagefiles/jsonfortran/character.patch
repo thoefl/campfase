@@ -1,0 +1,24 @@
+diff -ru json-fortran/src/json_file_module.F90 json-fortran_patch/src/json_file_module.F90
+--- json-fortran/src/json_file_module.F90	2023-02-16 13:57:46.989222400 +0900
++++ json-fortran_patch/src/json_file_module.F90	2023-02-16 13:59:53.709222400 +0900
+@@ -1013,8 +1013,20 @@
+     integer(IK),intent(out),optional    :: var_type   !! variable type
+     integer(IK),intent(out),optional    :: n_children !! number of children
+     character(kind=CK,len=:),allocatable,intent(out),optional :: name !! variable name
++#if defined __GFORTRAN__
++    character(kind=CK,len=:),allocatable :: p_name  !! temporary variable for getting name
++#endif
+ 
++#if defined __GFORTRAN__
++    if (present(name)) then !workaround for gfortran bug
++        call me%core%info(me%p,path,found,var_type,n_children,p_name)
++        name = p_name
++    else
++        call me%core%info(me%p,path,found,var_type,n_children)
++    end if
++#else
+     call me%core%info(me%p,path,found,var_type,n_children,name)
++#endif
+ 
+     end subroutine json_file_variable_info
+ !*****************************************************************************************

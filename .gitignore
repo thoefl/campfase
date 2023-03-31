@@ -1,0 +1,8 @@
+*.h5
+*.json
+*.pgm
+*.tdb
+build
+fftw_wisdom*.txt
+subprojects/opencalphad
+subprojects/jsonfortran
