@@ -1,0 +1,382 @@
+{
+  "simulation_name": "ni_superalloy_nbc",
+  "grid": {
+    "axes": [
+      {
+        "label": "x",
+        "nodes": 128,
+        "spacing": {
+          "value": 1E-7,
+          "unit": "meter"
+        },
+        "boundary_condition": {
+          "minimum": {
+            "type": "periodic",
+            "value": 0.0
+          },
+          "maximum": {
+            "type": "periodic",
+            "value": 0.0
+          }
+        }
+      },
+      {
+        "label": "y",
+        "nodes": 128,
+        "spacing": {
+          "value": 1E-7,
+          "unit": "meter"
+        },
+        "boundary_condition": {
+          "minimum": {
+            "type": "periodic",
+            "value": 0.0
+          },
+          "maximum": {
+            "type": "periodic",
+            "value": 0.0
+          }
+        }
+      }
+    ]
+  },
+  "simulation_stop": {
+    "by": {
+      "sim_clock": {
+        "value": 10000.0,
+        "unit": "second"
+      }
+    }
+  },
+  "time_step": {
+    "initial": {
+      "value": 5E0,
+      "unit": "second"
+    },
+    "prestep_c": true,
+    "bdfab": {
+      "enabled": true,
+      "force": false
+    },
+    "adaptive": {
+      "enabled": true,
+      "by": {
+        "step": {
+          "count": 100
+        }
+      },
+      "rel_error_tolerance": 5E-6,
+      "max_change_factor": 1.05,
+      "min_change_factor": 0.7,
+      "bdfab_min_factor_for_switch_to_euler": 100.0,
+      "use_bdfab": true,
+      "richardson_steps": 4
+    }
+  },
+  "fft_oscillation_check": {
+    "variables": [
+      "c_*",
+      "eta_*"
+    ],
+    "max_count": 5,
+    "tolerance": 1E-10,
+    "adaptive_dt_limit": {
+      "reduced_max_factor_duration": {
+        "by": {
+          "step": {
+            "count": 1000
+          }
+        }
+      },
+      "cooldown": {
+        "by": {
+          "step": {
+            "count": 100
+          }
+        }
+      }
+    },
+    "n_save": 10
+  },
+  "output": {
+    "console": {
+      "by": {
+        "wall_clock": {
+          "value": 15.0,
+          "unit": "second"
+        }
+      },
+      "verbosity": 2
+    },
+    "image": {
+      "by": {
+        "wall_clock": {
+          "value": 300.0,
+          "unit": "second"
+        }
+      }
+    },
+    "hdf": {
+      "extended": false,
+      "save_on_dt_min_factor": false,
+      "compression_level": 9,
+      "by": {
+        "sim_clock": {
+          "value": 300.0,
+          "unit": "second"
+        }
+      },
+      "eta_backup": {
+        "by": {
+          "wall_clock": {
+            "value": 43200.0,
+            "unit": "second"
+          }
+        }
+      }
+    }
+  },
+  "nucleation": {
+    "by": {
+      "step": {
+        "count": 100
+      }
+    },
+    "seed_hold": {
+      "by": {
+        "step": {
+          "count": 1000
+        }
+      }
+    },
+    "radius": {
+      "value": 0.5,
+      "unit": "nodes"
+    },
+    "n_nuclei_max": 4096,
+    "manual_rate": {
+      "E_a_factor": 0.6
+    }
+  },
+  "grain_reindex": {
+    "by": {
+      "step": {
+        "count": 2000
+      }
+    },
+    "for_performance": {
+      "enabled": true,
+      "n_eta": 2,
+      "n_eta_min_active": 4,
+      "fill_ratio": 0.2
+    },
+    "eta_separators": {
+      "intra": 1E-3,
+      "inter": 5E-7,
+      "fill": 5E-8,
+      "relative_tolerance": 1E-3
+    }
+  },
+  "fourier_continuation": {
+    "n_nodes": 128,
+    "w": 6.0,
+    "lazy_boundary": true
+  },
+  "restore_file": {
+    "enabled": false,
+    "c_only": false,
+    "restore_idx": -1,
+    "hdf_filename": ""
+  },
+  "initial_conditions": {
+    "pressure": {
+      "value": 1E5,
+      "unit": "pascal"
+    },
+    "temperature": {
+      "value": 600,
+      "unit": "celsius"
+    },
+    "atomic_fractions": {
+      "C": 0.03249790801271787,
+      "NB": 0.08402704209426208
+    },
+    "eta": "polycrystal",
+    "spinodal_noise": 1E-3,
+    "eta_shift": {
+      "value": [
+        0.5,
+        0.5
+      ],
+      "unit": "nodes"
+    },
+    "solid": {
+      "matrix_phase": "FCC_A1",
+      "precipitate_phase": "FCC_A1_NBC",
+      "finite_dimensions": [
+      ],
+      "precipitates": {
+        "count": 0
+      },
+      "grain_structure": {
+        "voronoi": {
+          "attempts": 1,
+          "free_fill_ratio": 0.1
+        },
+        "relative_density": 0.95,
+        "grain_radius_distribution": {
+          "sigma": 0.3,
+          "median": {
+            "value": 2.5E-6,
+            "unit": "meter"
+          }
+        }
+      }
+    }
+  },
+  "temperature_profile": [
+    {
+      "type": "ramp",
+      "target": {
+        "value": 1250,
+        "unit": "celsius"
+      },
+      "rate": {
+        "value": 10.0,
+        "unit": "kelvin/minute"
+      }
+    }
+  ],
+  "opencalphad": {
+    "tdb_filename": "mc_ni.tdb"
+  },
+  "species": [
+    {
+      "name": "C",
+      "instant_diffusion": true,
+      "diffusion_coefficient": {
+        "A": {
+          "value": 1.2E-5,
+          "unit": "meter**2/second"
+        },
+        "E_a": {
+          "value": 1.373E5,
+          "unit": "joule/mole"
+        }
+      }
+    },
+    {
+      "name": "NB",
+      "instant_diffusion": false,
+      "diffusion_coefficient": {
+        "A": {
+          "value": 1.04E-6,
+          "unit": "meter**2/second"
+        },
+        "E_a": {
+          "value": 2.0259E5,
+          "unit": "joule/mole"
+        }
+      }
+    },
+    {
+      "name": "NI",
+      "instant_diffusion": false,
+      "diffusion_coefficient": {
+        "A": {
+          "value": 1.27E-4,
+          "unit": "meter**2/second"
+        },
+        "E_a": {
+          "value": 2.809E5,
+          "unit": "joule/mole"
+        }
+      }
+    }
+  ],
+  "phases": [
+    {
+      "name": "pore",
+      "V_m": {
+        "value": 0.0,
+        "unit": "meter**3/mole"
+      },
+      "mobility_factor": {
+        "value": 1E5,
+        "unit": "(meter**3/(joule*second))/(meter**2/second)"
+      },
+        "is_compset": false,
+        "calphad_use_phase_conc": false,
+        "default_comp": "",
+        "brightness": 0.0
+      },
+    {
+      "name": "FCC_A1_NBC",
+      "V_m": {
+        "value": 1.345E-5,
+        "unit": "meter**3/mole"
+      },
+      "mobility_factor": {
+        "value": 1E5,
+        "unit": "(meter**3/(joule*second))/(meter**2/second)"
+      },
+      "is_compset": true,
+      "calphad_use_phase_conc": false,
+      "default_comp": ">.5 <.5 >.5 <.5",
+      "brightness": 1.0
+    },
+    {
+      "name": "FCC_A1",
+      "V_m": {
+        "value": 7.3780435E-6,
+        "unit": "meter**3/mole"
+      },
+      "mobility_factor": {
+        "value": 1E5,
+        "unit": "(meter**3/(joule*second))/(meter**2/second)"
+      },
+      "is_compset": false,
+      "calphad_use_phase_conc": false,
+      "default_comp": "<.5 >.5 <.5 >.5",
+      "brightness": 0.5
+    }
+  ],
+  "interface": {
+    "width": {
+      "value": 5.0,
+      "unit": "nodes"
+    },
+    "energy": {
+      "value": 1.0,
+      "unit": "joule/(meter**2)"
+    },
+    "gamma": 1.5
+  },
+  "chemical_energy": {
+    "parabolic_coefficient": {
+      "minimum": {
+        "value": 1E-3,
+        "unit": "joule/mole"
+      },
+      "maximum": {
+        "value": 2.5E4,
+        "unit": "joule/mole"
+      }
+    }
+  },
+  "check": {
+    "debug_level": 0,
+    "equilibrium": false,
+    "energy_model": false
+  },
+  "benchmark": {
+    "fft": {
+      "enabled": false,
+      "count": 1E3
+    },
+    "coarray": {
+      "enabled": false,
+      "count": 1E3
+    }
+  }
+}

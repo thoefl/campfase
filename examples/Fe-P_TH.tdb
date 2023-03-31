@@ -1,0 +1,170 @@
+$ Fe-P_TH.tdb
+$ Author: Thomas Hoefler, based on SGTE data and
+$ https://doi.org/10.1016/j.calphad.2005.09.006
+
+$Element     Standard state   mass [g/mol]    enthalpy_298    entropy_298
+ELEMENT VA   VACUUM            0.0                0.00            0.00      !
+ELEMENT FE   BCC_A2           55.847           4489.0            27.2797    !
+ELEMENT  P   WHITE_P          30.974           5360.0            41.09      !
+
+$
+$ ###########################################################
+$             SER (Standard elements references)
+$ ###########################################################
+$
+
+FUNCTION GHSERFE
+ 273.00 +1225.7+124.134*T-23.5143*T*LN(T)-0.00439752*T**2
+ -5.89269E-8*T**3+77358.5*T**(-1); 1811.00  Y
+ -25383.581+299.31255*T-46*T*LN(T)+2.2960305E+31*T**(-9); 6000.00  N
+ REF0 !
+FUNCTION GHSERPP 
+ 273.00  -43821.799+1026.69389*T-178.426*T*LN(T)+.290708*T**2
+ -1.04022667E-04*T**3+1632695*T**(-1);  317.30  Y 
+ -9587.448+152.341487*T-28.7335301*T*LN(T)+.001715669*T**2
+ -2.2829E-07*T**3+172966*T**(-1);  1000.00  Y
+ -8093.075+135.876831*T-26.326*T*LN(T); 3000.00  N 
+REF0 !
+
+$
+$ ###########################################################
+$           Gibbs energy functions other than SER
+$ ###########################################################
+$
+
+FUNCTION GPRED
+ 273.00 -25976.559+148.672002*T-25.55*T*LN(T)+3.4121E-3*T**2
+ -2.418867E-6*T**3+160095*T**(-1); 500.00  Y
+ -21723.721+77.671736*T-14.368*T*LN(T)-9.57685E-3*T**2
+ +0.393917E-6*T**3-141375*T**(-1); 852.35  Y
+ -119408.413+1026.02962*T-149.4495562*T*LN(T)+67.272364E-3*T**2
+ -6.651929E-6*T**3+12495943*T**(-1); 1500.00  Y
+ -24524.119+153.839181*T-26.326*T*LN(T); 3000.00  N
+REF0 !
+FUNCTION GPFCC
+ 298.00 +GPRED#+37656-13.26*T; 6000.00  N
+REF1 !
+FUNCTION GPBCC
+ 298.00 +GPRED#+44769-13.26*T; 6000.00  N
+REF1 !
+
+$***************************************************************************
+$
+$ Thermodynamic model parameters for phases
+$
+$***************************************************************************
+ 
+$
+$###########################################################################
+$                   THERMODYNAMIC PARAMETERS: LIQUID
+$###########################################################################
+$
+ PHASE LIQUID % 1  1.0 > >> 6 !
+    CONSTITUENT LIQUID  : FE,P :  !
+ PARAMETER G(LIQUID,FE;0)
+ 298.15 +12040.17-6.55843*T-3.6751551E-21*T**7+GHSERFE#; 1811.00  Y
+ -10839.7+291.302*T-46*T*LN(T); 6000.00  N
+REF0 !
+PARAMETER G(LIQUID,P;0)
+ 250.00 -26316.111+434.930931*T-70.7440584*T*LN(T)
+ -2.898936E-3*T**2+39.049371E-6*T**3+1141147*T**(-1); 317.30  Y
+ -7232.449+133.291873*T-26.326*T*LN(T); 3000.00  N
+REF0 !
+PARAMETER L(LIQUID,FE,P;0) 273.00 -266000+41.3*T; 6000.00  N
+REF1 !
+PARAMETER L(LIQUID,FE,P;2) 273.00 +96900-40.84*T; 6000.00  N
+REF1 !
+PARAMETER MQ&FE(LIQUID,FE;0) 298.15  0.0;
+	6.000E+3 N REF280!
+PARAMETER MQ&FE(LIQUID,P;0) 298.15  0.0;
+	6.000E+3 N REF280!
+PARAMETER MQ&P(LIQUID,FE;0) 298.15  0.0;
+	6.000E+3 N REF280!
+PARAMETER MQ&P(LIQUID,P;0) 298.15  0.0;
+	6.000E+3 N REF280!
+
+$
+$###########################################################################
+$                   THERMODYNAMIC PARAMETERS: FCC_A1
+$###########################################################################
+$
+ TYPE_DEFINITION ' GES A_P_D FCC_A1 MAGNETIC  -3.0    0.28 !
+ PHASE FCC_A1  %'  2 1   1 > 
+Face-centered cubic Austenite phase with Va on interstitial sublattice; 
+>> 6 !
+    CONSTITUENT FCC_A1  : FE%,P : VA% :  !
+PARAMETER G(FCC_A1,FE:VA;0) 273.00 -1462.4+8.282*T-1.15*T*LN(T)
+   +0.00064*T**2+GHSERFE#; 1811.00  Y
+   -1713.815+0.94001*T+0.4925095E+31*T**(-9)+GHSERFE#; 6000.00  N
+REF0 !
+PARAMETER G(FCC_A1,P:VA;0) 273.00 +GPFCC#; 3000.00  N
+REF0 !
+PARAMETER L(FCC_A1,FE,P:VA;0) 273.00 -198500+19.24*T; 6000.00  N
+REF1 !
+PARAMETER TC(FCC_A1,FE:VA;0) 273.00 -201; 6000.00  N
+REF1 !
+PARAMETER BMAGN(FCC_A1,FE:VA;0) 273.00 -2.1; 6000.00  N
+REF1 !
+
+$
+$###########################################################################
+$ THERMODYNAMIC PARAMETERS: BCC_A2  
+$###########################################################################
+$
+ TYPE_DEFINITION & GES A_P_D BCC_A2 MAGNETIC  -1.0    0.4 !
+ PHASE BCC_A2  %&  2 1   3 > 
+Body-centered cubic Ferrite phase. 
+>> 6 !
+    CONSTITUENT BCC_A2  : FE%,P : VA% :  !
+PARAMETER G(BCC_A2,FE:VA;0) 273.00 +GHSERFE#; 6000.00  N
+REF0 !
+PARAMETER G(BCC_A2,P:VA;0) 273.00 +GPBCC#; 6000.00  N
+REF0 !
+PARAMETER L(BCC_A2,FE,P:VA;0) 273.00 -200300+9.0*T; 6000.00  N
+REF1 !
+PARAMETER TC(BCC_A2,FE:VA;0) 273.00 +1043; 6000.00  N
+REF0 !
+PARAMETER BMAGN(BCC_A2,FE:VA;0) 273.00 +2.22; 6000.00  N
+REF0 !
+PARAMETER MQ&FE(BCC_A2,FE:VA;0) 298.15  0.0;
+	6.000E+3 N REF280!
+PARAMETER MQ&FE(BCC_A2,P:VA;0) 298.15  0.0;
+	6.000E+3 N REF280!
+PARAMETER MQ&P(BCC_A2,FE:VA;0) 298.15  0.0;
+	6.000E+3 N REF280!
+PARAMETER MQ&P(BCC_A2,P:VA;0) 298.15  0.0;
+	6.000E+3 N REF280!
+
+$
+$###########################################################################
+$                   THERMODYNAMIC PARAMETERS:   M3P
+$###########################################################################
+$
+ PHASE M3P  %  2 3   1 > 
+Fe-rich phosphide. 
+>> 1 !
+  CONSTITUENT M3P  : FE : P :  !
+ PARAMETER G(M3P,FE:P;0) 273.00 +GPRED#+3*GHSERFE#-193600+9.75*T; 6000.00  N
+REF1 !
+
+$
+$###########################################################################
+$                   THERMODYNAMIC PARAMETERS:   RED_P
+$###########################################################################
+$
+ PHASE RED_P  %  1 1 > 
+Red phosphorus. 
+>> 1 !
+  CONSTITUENT RED_P  : P :  !
+ PARAMETER G(RED_P,P;0) 273.00 +GPRED#; 6000.00  N
+REF1 !
+ 
+ LIST_OF_REFERENCES
+ NUMBER  SOURCE
+REF0  'Alan Dinsdale, SGTE Data for Pure Elements, 
+          Calphad Vol 15(1991) p 317-425, 
+          also in NPL Report DMA(A)195 Rev. August 1990'
+REF1 'H. Ohtani, Thermodynamic analysis of the Fe–Ti–P ternary system by
+           incorporating first-principles calculations into the CALPHAD
+		   approach, CALPHAD, Vol. 30, No. 2, pp 147-158, 2006.'
+!

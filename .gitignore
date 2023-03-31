@@ -1,7 +1,7 @@
 *.h5
-*.json
+/*.json
 *.pgm
-*.tdb
+/*.tdb
 build
 fftw_wisdom*.txt
 subprojects/opencalphad
